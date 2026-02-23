@@ -517,6 +517,7 @@
     <script>
         const SUPABASE_URL = 'https://dqaulmpuazmvbvfdktiz.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_7HwEAqjE3kWaerZq1c3XrQ_JpgOIanT';
+        const ZAPIER_WEBHOOK_URL = 'https://hooks.zapier.com/hooks/catch/25369092/uccqnlx/';
 
         const form = document.getElementById('contactForm');
         const submitBtn = form.querySelector('.submit-btn');
@@ -537,7 +538,8 @@
             };
 
             try {
-                const response = await fetch(`${SUPABASE_URL}/rest/v1/contact_submissions`, {
+                // Send to Supabase
+                const supabasePromise = fetch(`${SUPABASE_URL}/rest/v1/contact_submissions`, {
                     method: 'POST',
                     headers: {
                         'apikey': SUPABASE_ANON_KEY,
@@ -548,11 +550,20 @@
                     body: JSON.stringify(data)
                 });
 
-                if (response.ok) {
-                    alert('Thank you! Your message has been sent.');
+                // Send to Zapier
+                const zapierPromise = fetch(ZAPIER_WEBHOOK_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', // Webhooks often require no-cors if not handling preflight
+                    body: JSON.stringify(data)
+                });
+
+                const [supabaseResponse] = await Promise.all([supabasePromise, zapierPromise]);
+
+                if (supabaseResponse.ok) {
+                    alert('Thank you! Your message has been sent and automation triggered.');
                     form.reset();
                 } else {
-                    throw new Error('Failed to send');
+                    throw new Error('Failed to send to database');
                 }
             } catch (error) {
                 console.error('Error:', error);
