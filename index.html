@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nikunj Phophalia | Portfolio</title>
+    <meta name="description"
+        content="Portfolio of Nikunj Phophalia, a Computer Science student and Aspiring Developer.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@400&family=Jost:wght@300;400&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Scroll Cue Target -->
+    <div id="top"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#top" class="logo">Nikunj <span>Phophalia</span></a>
+            <div class="nav-links">
+                <a href="#about">About</a>
+                <a href="#skills">Skills</a>
+                <a href="#projects">Projects</a>
+                <a href="#experience">Experience</a>
+                <a href="#contact">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero" id="hero">
+            <div class="edge-line left"></div>
+            <div class="edge-line right"></div>
+
+            <div class="hero-container">
+                <div class="hero-content">
+                    <div class="eyebrow fade-up" style="animation-delay: 0.1s">
+                        <span class="line"></span>
+                        <span class="text">Student & Aspiring Developer</span>
+                    </div>
+                    <h1 class="fade-up" style="animation-delay: 0.3s">
+                        Nikunj<br>
+                        <span class="gold-italic">Phophalia</span>
+                    </h1>
+                    <p class="subtitle fade-up" style="animation-delay: 0.5s">
+                        Crafting digital experiences through elegant code and thoughtful design. Currently exploring the
+                        intersections of software architecture and user-centric solutions.
+                    </p>
+                    <div class="hero-actions fade-up" style="animation-delay: 0.7s">
+                        <a href="#projects" class="btn btn-primary">View My Work</a>
+                        <a href="#contact" class="btn btn-ghost">Say Hello</a>
+                    </div>
+                </div>
+
+                <div class="hero-stats fade-up" style="animation-delay: 0.9s">
+                    <div class="stat-item">
+                        <span class="stat-num">2+</span>
+                        <span class="stat-label">Years Learning</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <span class="stat-num">10+</span>
+                        <span class="stat-label">Projects Built</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <span class="stat-num">∞</span>
+                        <span class="stat-label">Curiosity</span>
+                    </div>
+                </div>
+            </div>
+
+            <a href="#about" class="scroll-cue">
+                <span class="line"></span>
+                <span class="text">SCROLL</span>
+            </a>
+        </section>
+
+        <!-- About Section -->
+        <section class="about" id="about">
+            <div class="section-label">About Me</div>
+            <div class="about-grid">
+                <div class="about-visual">
+                    <div class="portrait-box">
+                        <img src="nikunj_portrait_1771836736243.png" alt="Nikunj Phophalia"
+                            style="width: 100%; height: 100%; object-fit: cover; position: relative; z-index: 1;">
+                        <div class="portrait-placeholder" style="position: absolute; z-index: 0;">
+                            <span>NP</span>
+                        </div>
+                    </div>
+                    <p class="caption">Based in India</p>
+                </div>
+                <div class="about-content">
+                    <h2 class="section-heading">A Student Who<br><span class="gold-italic">Builds Things</span></h2>
+                    <div class="about-text">
+                        <p>I am a computer science student driven by the challenge of turning complex problems into
+                            simple, beautiful digital solutions. My journey in technology is defined by a relentless
+                            drive to learn and an obsession with detail.</p>
+                        <p>Currently pursuing my degree, I spend my time diving deep into modern web technologies and
+                            systems design. I believe that great software isn't just about code—it's about the people
+                            who use it and the problems it solves.</p>
+                        <p>When I'm not coding, you'll find me exploring architectural patterns, contributing to
+                            open-source, or reading about the future of technology.</p>
+                    </div>
+
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <span class="label">Currently</span>
+                            <span class="value">Computer Science Student</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Location</span>
+                            <span class="value">India</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Available For</span>
+                            <span class="value">Internships & Collaboration</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Interests</span>
+                            <span class="value">AI, Web Arch, UI Design</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section class="skills" id="skills">
+            <div class="section-label gold-light">My Stack</div>
+            <h2 class="section-heading white">What I Know</h2>
+
+            <div class="skills-container">
+                <!-- Radio Hack for Tabs -->
+                <input type="radio" name="skill-tabs" id="tab-frontend" checked>
+                <input type="radio" name="skill-tabs" id="tab-backend">
+                <input type="radio" name="skill-tabs" id="tab-database">
+                <input type="radio" name="skill-tabs" id="tab-tools">
+
+                <div class="skills-sidebar">
+                    <label for="tab-frontend" class="skill-nav-item">Frontend</label>
+                    <label for="tab-backend" class="skill-nav-item">Backend</label>
+                    <label for="tab-database" class="skill-nav-item">Database</label>
+                    <label for="tab-tools" class="skill-nav-item">Tools</label>
+                </div>
+
+                <div class="skills-content">
+                    <!-- Frontend Panel -->
+                    <div class="skill-panel panel-frontend">
+                        <div class="skill-grid">
+                            <div class="skill-cell">
+                                <div class="skill-info"><span>HTML5</span><span>95%</span></div>
+                                <div class="prog-bar">
+                                    <div class="fill" style="width: 95%;"></div>
+                                </div>
+                            </div>
+                            <div class="skill-cell">
+                                <div class="skill-info"><span>CSS3 / SCSS</span><span>90%</span></div>
+                                <div class="prog-bar">
+                                    <div class="fill" style="width: 90%;"></div>
+                                </div>
+                            </div>
+                            <div class="skill-cell">
+                                <div class="skill-info"><span>JavaScript</span><span>85%</span></div>
+                                <div class="prog-bar">
+                                    <div class="fill" style="width: 85%;"></div>
+                                </div>
+                            </div>
+                            <div class="skill-cell">
+                                <div class="skill-info"><span>React</span><span>80%</span></div>
+                                <div class="prog-bar">
+                                    <div class="fill" style="width: 80%;"></div>
+                                </div>
+                            </div>
+                            <div class="skill-cell">
+                                <div class="skill-info"><span>TypeScript</span><span>75%</span></div>
+                                <div class="prog-bar">
+                                    <div class="fill" style="width: 75%;"></div>
+                                </div>
+                            </div>
+                            <div class="skill-cell">
+                                <div class="skill-info"><span>Next.js</span><span>70%</span></div>
+                                <div class="prog-bar">
+                                    <div class="fill" style="width: 70%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Backend Panel -->
+                    <div class="skill-panel panel-backend">
+                        <div class="skill-grid">
+                            <div class="skill-cell">
+                                <div class="skill-info"><span>Node.js</span><span>80%</span></div>
+                                <div class="prog-bar">
+                                    <div class="fill" style="width: 80%;"></div>
+                                </div>
+                            </div>
+                            <div class="skill-cell">
+                                <div class="skill-info"><span>Python</span><span>85%</span></div>
+                                <div class="prog-bar">
+                                    <div class="fill" style="width: 85%;"></div>
+                                </div>
+                            </div>
+                            <div class="skill-cell">
+                                <div class="skill-info"><span>Express</span><span>75%</span></div>
+                                <div class="prog-bar">
+                                    <div class="fill" style="width: 75%;"></div>
+                                </div>
+                            </div>
+                            <div class="skill-cell">
+                                <div class="skill-info"><span>Go</span><span>60%</span></div>
+                                <div class="prog-bar">
+                                    <div class="fill" style="width: 60%;"></div>
+                                </div>
+                            </div>
+                            <div class="skill-cell">
+                                <div class="skill-info"><span>FastAPI</span><span>70%</span></div>
+                                <div class="prog-bar">
+                                    <div class="fill" style="width: 70%;"></div>
+                                </div>
+                            </div>
+                            <div class="skill-cell">
+                                <div class="skill-info"><span>Rest APIs</span><span>90%</span></div>
+                                <div class="prog-bar">
+                                    <div class="fill" style="width: 90%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Database Panel -->
+                    <div class="skill-panel panel-database">
+                        <div class="skill-grid">
+                            <div class="skill-cell">
+                                <div class="skill-info"><span>PostgreSQL</span><span>85%</span></div>
+                                <div class="prog-bar">
+                                    <div class="fill" style="width: 85%;"></div>
+                                </div>
+                            </div>
+                            <div class="skill-cell">
+                                <div class="skill-info"><span>MongoDB</span><span>80%</span></div>
+                                <div class="prog-bar">
+                                    <div class="fill" style="width: 80%;"></div>
+                                </div>
+                            </div>
+                            <div class="skill-cell">
+                                <div class="skill-info"><span>Redis</span><span>65%</span></div>
+                                <div class="prog-bar">
+                                    <div class="fill" style="width: 65%;"></div>
+                                </div>
+                            </div>
+                            <div class="skill-cell">
+                                <div class="skill-info"><span>SQL Optimization</span><span>75%</span></div>
+                                <div class="prog-bar">
+                                    <div class="fill" style="width: 75%;"></div>
+                                </div>
+                            </div>
+                            <div class="skill-cell">
+                                <div class="skill-info"><span>Elasticsearch</span><span>60%</span></div>
+                                <div class="prog-bar">
+                                    <div class="fill" style="width: 60%;"></div>
+                                </div>
+                            </div>
+                            <div class="skill-cell">
+                                <div class="skill-info"><span>Prisma / TypeORM</span><span>80%</span></div>
+                                <div class="prog-bar">
+                                    <div class="fill" style="width: 80%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tools Panel -->
+                    <div class="skill-panel panel-tools">
+                        <div class="skill-grid">
+                            <div class="skill-cell">
+                                <div class="skill-info"><span>Git / GitHub</span><span>95%</span></div>
+                                <div class="prog-bar">
+                                    <div class="fill" style="width: 95%;"></div>
+                                </div>
+                            </div>
+                            <div class="skill-cell">
+                                <div class="skill-info"><span>Docker</span><span>75%</span></div>
+                                <div class="prog-bar">
+                                    <div class="fill" style="width: 75%;"></div>
+                                </div>
+                            </div>
+                            <div class="skill-cell">
+                                <div class="skill-info"><span>AWS</span><span>60%</span></div>
+                                <div class="prog-bar">
+                                    <div class="fill" style="width: 60%;"></div>
+                                </div>
+                            </div>
+                            <div class="skill-cell">
+                                <div class="skill-info"><span>Figma</span><span>85%</span></div>
+                                <div class="prog-bar">
+                                    <div class="fill" style="width: 85%;"></div>
+                                </div>
+                            </div>
+                            <div class="skill-cell">
+                                <div class="skill-info"><span>Postman</span><span>90%</span></div>
+                                <div class="prog-bar">
+                                    <div class="fill" style="width: 90%;"></div>
+                                </div>
+                            </div>
+                            <div class="skill-cell">
+                                <div class="skill-info"><span>Linux Terminal</span><span>85%</span></div>
+                                <div class="prog-bar">
+                                    <div class="fill" style="width: 85%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section class="projects" id="projects">
+            <div class="section-label">Portfolio</div>
+            <h2 class="section-heading">Featured<br><span class="gold-italic">Photography</span></h2>
+
+            <div class="featured-project">
+                <div class="fp-left">
+                    <span class="fp-num">01</span>
+                </div>
+                <div class="fp-right">
+                    <span class="badge">Latest Work</span>
+                    <h3>Project Nexus</h3>
+                    <p>A comprehensive system designed to synchronize multi-platform data streams with high efficiency
+                        and minimal latency.</p>
+                    <div class="tag-row">
+                        <span class="tag">Next.js</span>
+                        <span class="tag">Supabase</span>
+                        <span class="tag">PostgreSQL</span>
+                    </div>
+                    <a href="#" class="btn btn-primary">Case Study</a>
+                </div>
+            </div>
+
+            <div class="project-list">
+                <div class="project-row">
+                    <div class="p-num">02</div>
+                    <div class="p-info">
+                        <h4>Aether Dashboard</h4>
+                        <div class="tag-row">
+                            <span class="tag">UI/UX</span>
+                            <span class="tag">Dashboard</span>
+                        </div>
+                    </div>
+                    <div class="p-desc">Real-time monitoring tool for cloud infrastructure with predictive analytics.
+                    </div>
+                </div>
+                <div class="project-row">
+                    <div class="p-num">03</div>
+                    <div class="p-info">
+                        <h4>Veritas Engine</h4>
+                        <div class="tag-row">
+                            <span class="tag">Core</span>
+                            <span class="tag">Security</span>
+                        </div>
+                    </div>
+                    <div class="p-desc">An open-source encryption engine focusing on quantum-resistant algorithms.</div>
+                </div>
+                <div class="project-row">
+                    <div class="p-num">04</div>
+                    <div class="p-info">
+                        <h4>Lumina App</h4>
+                        <div class="tag-row">
+                            <span class="tag">Mobile</span>
+                            <span class="tag">LifeStyle</span>
+                        </div>
+                    </div>
+                    <div class="p-desc">A wellness application that tracks circadian rhythms to optimize productivity.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Experience Section -->
+        <section class="experience" id="experience">
+            <div class="section-label">Journey</div>
+            <h2 class="section-heading">Timeline of<br><span class="gold-italic">Growth</span></h2>
+
+            <div class="experience-container">
+                <input type="radio" name="exp-tabs" id="exp-1" checked>
+                <input type="radio" name="exp-tabs" id="exp-2">
+                <input type="radio" name="exp-tabs" id="exp-3">
+                <input type="radio" name="exp-tabs" id="exp-4">
+
+                <div class="exp-nav">
+                    <label for="exp-1" class="exp-item">
+                        <span class="exp-date">2024 — Present</span>
+                        <span class="exp-role">Open Source Contributor</span>
+                        <span class="exp-org">Github Community</span>
+                    </label>
+                    <label for="exp-2" class="exp-item">
+                        <span class="exp-date">Summer 2023</span>
+                        <span class="exp-role">Web Developer Intern</span>
+                        <span class="exp-org">Tech Innovations Lab</span>
+                    </label>
+                    <label for="exp-3" class="exp-item">
+                        <span class="exp-date">2022 — 2023</span>
+                        <span class="exp-role">Coding Mentor</span>
+                        <span class="exp-org">University Society</span>
+                    </label>
+                    <label for="exp-4" class="exp-item">
+                        <span class="exp-date">2021 — 2024</span>
+                        <span class="exp-role">Student</span>
+                        <span class="exp-org">Computer Science Council</span>
+                    </label>
+                </div>
+
+                <div class="exp-details">
+                    <div class="exp-panel panel-1">
+                        <h3 class="role-title">Open Source Contributor</h3>
+                        <p class="org-line">Github | Remote</p>
+                        <p class="desc">Actively contributing to various web-based open-source projects, improving
+                            documentation, and fixing critical bugs.</p>
+                        <ul class="points">
+                            <li>Optimized frontend components for better accessibility scores.</li>
+                            <li>Implemented automated testing workflows using CI/CD.</li>
+                            <li>Collaborated with international teams on feature development.</li>
+                        </ul>
+                    </div>
+                    <div class="exp-panel panel-2">
+                        <h3 class="role-title">Web Developer Intern</h3>
+                        <p class="org-line">Tech Innovations Lab | India</p>
+                        <p class="desc">Assisted in the development of client-facing dashboards and internal management
+                            tools.</p>
+                        <ul class="points">
+                            <li>Developed responsive UI components using vanilla CSS.</li>
+                            <li>Streamlined data entry processes, reducing errors by 20%.</li>
+                            <li>Learned production deployment cycles and version control.</li>
+                        </ul>
+                    </div>
+                    <div class="exp-panel panel-3">
+                        <h3 class="role-title">Coding Mentor</h3>
+                        <p class="org-line">University Society | India</p>
+                        <p class="desc">Mentored junior students in data structures and competitive programming.</p>
+                        <ul class="points">
+                            <li>Conducted weekly workshops for 50+ students.</li>
+                            <li>Designed curriculum for 'Introduction to Web Dev' course.</li>
+                            <li>Guided students in building their first full-stack projects.</li>
+                        </ul>
+                    </div>
+                    <div class="exp-panel panel-4">
+                        <h3 class="role-title">Computer Science Council</h3>
+                        <p class="org-line">Academic Council | India</p>
+                        <p class="desc">Member of the departmental council representing second-year students.</p>
+                        <ul class="points">
+                            <li>Organized high-profile technical fests and hackathons.</li>
+                            <li>Liaised with faculty to improve department labs.</li>
+                            <li>Managed social media presence for departmental events.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section class="contact" id="contact">
+            <div class="section-label">Connect</div>
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <p class="intro">Have a project in mind or just want to say hello? I'm always open to discussing new
+                        opportunities and creative ideas.</p>
+                    <a href="mailto:hello@nikunj.dev" class="email-link">hello@nikunj.dev</a>
+
+                    <div class="social-links">
+                        <a href="#">GITHUB</a>
+                        <a href="#">LINKEDIN</a>
+                        <a href="#">TWITTER</a>
+                        <a href="#">RESUME</a>
+                    </div>
+                </div>
+                <div class="contact-form-container">
+                    <form class="contact-form" id="contactForm">
+                        <div class="form-group">
+                            <input type="text" name="user_name" placeholder="Name" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" name="user_email" placeholder="Email" required>
+                        </div>
+                        <div class="form-group">
+                            <textarea name="user_message" placeholder="Your Message" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary submit-btn">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-left">
+            &copy; 2026 Nikunj Phophalia. All Rights Reserved.
+        </div>
+        <div class="footer-right">
+            <a href="#top">Back to top ↑</a>
+        </div>
+    </footer>
+
+    <!-- Supabase Integration Script -->
+    <script>
+        const SUPABASE_URL = 'https://dqaulmpuazmvbvfdktiz.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_7HwEAqjE3kWaerZq1c3XrQ_JpgOIanT';
+
+        const form = document.getElementById('contactForm');
+        const submitBtn = form.querySelector('.submit-btn');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // UI State: Loading
+            const originalBtnText = submitBtn.innerText;
+            submitBtn.innerText = 'SENDING...';
+            submitBtn.disabled = true;
+
+            const formData = new FormData(form);
+            const data = {
+                name: formData.get('user_name'),
+                email: formData.get('user_email'),
+                message: formData.get('user_message')
+            };
+
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/contact_submissions`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=minimal'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    alert('Thank you! Your message has been sent.');
+                    form.reset();
+                } else {
+                    throw new Error('Failed to send');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Oops! Something went wrong. Please try again.');
+            } finally {
+                submitBtn.innerText = originalBtnText;
+                submitBtn.disabled = false;
+            }
+        });
+    </script>
+
+</body>
+
+</html>
