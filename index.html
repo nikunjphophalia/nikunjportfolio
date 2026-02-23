@@ -538,6 +538,8 @@
             };
 
             try {
+                console.log('Attempting to send data:', data);
+
                 // Send to Supabase
                 const supabasePromise = fetch(`${SUPABASE_URL}/rest/v1/contact_submissions`, {
                     method: 'POST',
@@ -553,21 +555,25 @@
                 // Send to Zapier
                 const zapierPromise = fetch(ZAPIER_WEBHOOK_URL, {
                     method: 'POST',
-                    mode: 'no-cors', // Webhooks often require no-cors if not handling preflight
+                    mode: 'no-cors',
                     body: JSON.stringify(data)
                 });
 
                 const [supabaseResponse] = await Promise.all([supabasePromise, zapierPromise]);
 
                 if (supabaseResponse.ok) {
+                    console.log('Supabase success');
                     alert('Thank you! Your message has been sent and automation triggered.');
                     form.reset();
                 } else {
-                    throw new Error('Failed to send to database');
+                    const errorData = await supabaseResponse.json().catch(() => ({}));
+                    console.error('Supabase error status:', supabaseResponse.status);
+                    console.error('Supabase error context:', errorData);
+                    throw new Error(`Supabase Error ${supabaseResponse.status}: ${errorData.message || 'Unknown error'}`);
                 }
             } catch (error) {
-                console.error('Error:', error);
-                alert('Oops! Something went wrong. Please try again.');
+                console.error('Submission error details:', error);
+                alert('Oops! Something went wrong. \n\nCheck if you have created the "contact_submissions" table in Supabase with columns: name, email, message.');
             } finally {
                 submitBtn.innerText = originalBtnText;
                 submitBtn.disabled = false;
