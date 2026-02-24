@@ -532,7 +532,7 @@
     <!-- Supabase Integration Script -->
     <script>
         const SUPABASE_URL = 'https://dqaulmpuazmvbvfdktiz.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_7HwEAqjE3kWaerZq1c3XrQ_JpgOIanT';
+        const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_7HwEAqjE3kWaerZq1c3XrQ_JpgOIanT';
         const ZAPIER_WEBHOOK_URL = 'https://hooks.zapier.com/hooks/catch/25369092/uccqnlx/';
 
         const form = document.getElementById('contactForm');
@@ -560,8 +560,8 @@
                 const supabasePromise = fetch(`${SUPABASE_URL}/rest/v1/contact_submissions`, {
                     method: 'POST',
                     headers: {
-                        'apikey': SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'apikey': SUPABASE_PUBLISHABLE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
                         'Content-Type': 'application/json',
                         'Prefer': 'return=minimal'
                     },
