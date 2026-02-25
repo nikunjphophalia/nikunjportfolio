@@ -569,7 +569,8 @@
         const ADMIN_EMAIL = 'admin-nikunjphophalia@gmail.com';
 
         // Initialize Supabase Client
-        const sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+        window.sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+        const sbClient = window.sbClient;
 
         const form = document.getElementById('contactForm');
         const submitBtn = form.querySelector('.submit-btn');
@@ -663,7 +664,7 @@
                 document.getElementById('adminEmail').innerText = user.email;
                 loadSubmissions();
             } else if (user) {
-                adminAuthSection.innerHTML = `<p>Access Denied. Only ${ADMIN_EMAIL} can access this portal.</p><button onclick="sbClient.auth.signOut().then(checkUser)" class="btn btn-ghost">Logout</button>`;
+                adminAuthSection.innerHTML = `<p>Access Denied. Only ${ADMIN_EMAIL} can access this portal.</p><button onclick="window.sbClient.auth.signOut().then(window.checkUser)" class="btn btn-ghost">Logout</button>`;
                 adminAuthSection.style.display = 'block';
                 adminDashboard.style.display = 'none';
             } else {
@@ -671,6 +672,7 @@
                 adminDashboard.style.display = 'none';
             }
         }
+        window.checkUser = checkUser;
 
         // Load Submissions
         async function loadSubmissions() {
