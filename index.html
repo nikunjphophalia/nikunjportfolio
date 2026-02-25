@@ -571,41 +571,47 @@
                 ADMIN: 'admin-nikunjphophalia@gmail.com'
             };
 
-            // Initialize Client with unique name to avoid conflicts
-            const nikunjSB = window.supabase.createClient(CONFIG.URL, CONFIG.KEY);
-            window.nikunjSB = nikunjSB;
+            // Safety check for keys
+            if (CONFIG.KEY.startsWith('sb_publishable')) {
+                console.warn('⚠️ WARNING: You are using a "sb_publishable" key. If login fails, please replace it with your "anon public" key (starts with "eyJ") from Supabase Settings > API.');
+            }
+
+            // Initialize Client
+            const sbClient = window.supabase.createClient(CONFIG.URL, CONFIG.KEY);
+            window.nikunjSB = sbClient;
 
             // UI Elements
+            const getEl = (id) => document.getElementById(id);
             const elements = {
-                form: document.getElementById('contactForm'),
-                submitBtn: document.querySelector('#contactForm .submit-btn'),
-                portal: document.getElementById('adminPortal'),
-                authSec: document.getElementById('adminAuthSection'),
-                dashSec: document.getElementById('adminDashboard'),
-                list: document.getElementById('submissionsList'),
-                loginLink: document.getElementById('adminLoginLink'),
-                closeBtn: document.getElementById('closeAdmin'),
-                googleBtn: document.getElementById('googleSignIn'),
-                logoutBtn: document.getElementById('signOut'),
-                emailDisplay: document.getElementById('adminEmail')
+                form: getEl('contactForm'),
+                portal: getEl('adminPortal'),
+                authSec: getEl('adminAuthSection'),
+                dashSec: getEl('adminDashboard'),
+                list: getEl('submissionsList'),
+                loginLink: getEl('adminLoginLink'),
+                closeBtn: getEl('closeAdmin'),
+                googleBtn: getEl('googleSignIn'),
+                logoutBtn: getEl('signOut'),
+                emailDisplay: getEl('adminEmail')
             };
 
-            // Form Logic
+            // Form Handler
             elements.form.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                const originalText = elements.submitBtn.innerText;
-                elements.submitBtn.innerText = 'SENDING...';
-                elements.submitBtn.disabled = true;
+                const btn = elements.form.querySelector('.submit-btn');
+                const originalText = btn.innerText;
+                btn.innerText = 'SENDING...';
+                btn.disabled = true;
 
                 const formData = new FormData(elements.form);
-                const payload = {
+                const data = {
                     name: formData.get('user_name'),
                     email: formData.get('user_email'),
                     message: formData.get('user_message')
                 };
 
                 try {
-                    const sbRes = await fetch(`${CONFIG.URL}/rest/v1/contact_submissions`, {
+                    const res = await fetch(`${CONFIG.URL}/rest/v1/contact_submissions`, {
                         method: 'POST',
                         headers: {
                             'apikey': CONFIG.KEY,
@@ -613,57 +619,51 @@
                             'Content-Type': 'application/json',
                             'Prefer': 'return=minimal'
                         },
-                        body: JSON.stringify(payload)
+                        body: JSON.stringify(data)
                     });
 
-                    fetch(CONFIG.ZAPIER, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
+                    fetch(CONFIG.ZAPIER, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) });
 
-                    if (sbRes.ok) {
-                        alert('Message Sent!');
+                    if (res.ok) {
+                        alert('Message Sent Successfully!');
                         elements.form.reset();
-                        if (elements.dashSec.style.display !== 'none') loadMessages();
-                    } else {
-                        throw new Error('API Error');
-                    }
+                        if (elements.dashSec.style.display === 'block') loadMessages();
+                    } else { throw new Error('Failed'); }
                 } catch (err) {
-                    alert('Submission error. Please check your Supabase setup.');
+                    alert('Error sending message. Check your Supabase table RLS policies.');
                 } finally {
-                    elements.submitBtn.innerText = originalText;
-                    elements.submitBtn.disabled = false;
+                    btn.innerText = originalText;
+                    btn.disabled = false;
                 }
             });
 
-            // Admin Logic
-            const showPortal = () => { elements.portal.classList.add('active'); checkAccess(); };
-            const hidePortal = () => { elements.portal.classList.remove('active'); };
-
-            elements.loginLink.addEventListener('click', showPortal);
-            elements.closeBtn.addEventListener('click', hidePortal);
-
-            elements.googleBtn.addEventListener('click', async () => {
-                console.log("Initiating Google Sign-In...");
-                const { error } = await nikunjSB.auth.signInWithOAuth({
+            // Dashboard Functions
+            window.nikunjLogin = async () => {
+                console.log("Redirecting to Google...");
+                const { error } = await sbClient.auth.signInWithOAuth({
                     provider: 'google',
-                    options: { redirectTo: window.location.origin + window.location.pathname }
+                    options: { redirectTo: window.location.origin }
                 });
-                if (error) alert("Sign-in error: " + error.message);
-            });
+                if (error) alert(error.message);
+            };
 
-            elements.logoutBtn.addEventListener('click', async () => {
-                await nikunjSB.auth.signOut();
-                checkAccess();
-            });
+            window.nikunjLogout = async () => {
+                await sbClient.auth.signOut();
+                window.location.reload();
+            };
 
             async function checkAccess() {
-                const { data: { user } } = await nikunjSB.auth.getUser();
+                const { data: { user } } = await sbClient.auth.getUser();
                 if (user && user.email === CONFIG.ADMIN) {
                     elements.authSec.style.display = 'none';
                     elements.dashSec.style.display = 'block';
                     elements.emailDisplay.innerText = user.email;
                     loadMessages();
                 } else if (user) {
-                    elements.authSec.innerHTML = `<p>Access Denied. Only ${CONFIG.ADMIN} can enter.</p>
-                        <button onclick="window.nikunjSB.auth.signOut().then(() => window.location.reload())" class="btn btn-ghost">Switch Account</button>`;
+                    elements.authSec.innerHTML = `
+                        <p>Access Denied. Only ${CONFIG.ADMIN} can enter.</p>
+                        <button onclick="window.nikunjLogout()" class="btn btn-ghost">Switch Account</button>
+                    `;
                     elements.authSec.style.display = 'block';
                     elements.dashSec.style.display = 'none';
                 } else {
@@ -674,10 +674,9 @@
 
             async function loadMessages() {
                 elements.list.innerHTML = '<p class="loading-msg">Fetching...</p>';
-                const { data, error } = await nikunjSB.from('contact_submissions').select('*').order('created_at', { ascending: false });
-
+                const { data, error } = await sbClient.from('contact_submissions').select('*').order('created_at', { ascending: false });
                 if (error) { elements.list.innerHTML = `<p class="error-msg">${error.message}</p>`; return; }
-                if (!data || data.length === 0) { elements.list.innerHTML = '<p class="loading-msg">No messages.</p>'; return; }
+                if (!data || data.length === 0) { elements.list.innerHTML = '<p class="loading-msg">No messages found.</p>'; return; }
 
                 elements.list.innerHTML = data.map(m => `
                     <div class="submission-card">
@@ -689,12 +688,20 @@
             }
 
             window.deleteMsg = async (id) => {
-                if (!confirm('Delete message?')) return;
-                const { error } = await nikunjSB.from('contact_submissions').delete().eq('id', id);
+                if (!confirm('Delete this message?')) return;
+                const { error } = await sbClient.from('contact_submissions').delete().eq('id', id);
                 if (error) alert(error.message); else loadMessages();
             };
 
-            // Run check on load
+            // Event Listeners for Portal
+            elements.loginLink.addEventListener('click', () => { elements.portal.classList.add('active'); checkAccess(); });
+            elements.closeBtn.addEventListener('click', () => elements.portal.classList.remove('active'));
+            elements.logoutBtn.addEventListener('click', window.nikunjLogout);
+
+            // Attach login to button
+            elements.googleBtn.addEventListener('click', window.nikunjLogin);
+
+            // Run check on static load
             checkAccess();
         })();
     </script>
