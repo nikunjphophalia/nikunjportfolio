@@ -663,7 +663,7 @@
                 document.getElementById('adminEmail').innerText = user.email;
                 loadSubmissions();
             } else if (user) {
-                adminAuthSection.innerHTML = `<p>Access Denied. Only ${ADMIN_EMAIL} can access this portal.</p><button onclick="supabase.auth.signOut().then(checkUser)" class="btn btn-ghost">Logout</button>`;
+                adminAuthSection.innerHTML = `<p>Access Denied. Only ${ADMIN_EMAIL} can access this portal.</p><button onclick="sbClient.auth.signOut().then(checkUser)" class="btn btn-ghost">Logout</button>`;
                 adminAuthSection.style.display = 'block';
                 adminDashboard.style.display = 'none';
             } else {
