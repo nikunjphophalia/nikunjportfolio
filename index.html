@@ -642,11 +642,27 @@
 
         // Google Sign In
         document.getElementById('googleSignIn').addEventListener('click', async () => {
-            const { error } = await sbClient.auth.signInWithOAuth({
-                provider: 'google',
-                options: { redirectTo: window.location.href }
-            });
-            if (error) alert('Error: ' + error.message);
+            console.log('Google Sign-In button clicked');
+            try {
+                const { data, error } = await window.sbClient.auth.signInWithOAuth({
+                    provider: 'google',
+                    options: {
+                        redirectTo: window.location.origin + window.location.pathname,
+                        queryParams: {
+                            access_type: 'offline',
+                            prompt: 'consent',
+                        }
+                    }
+                });
+                console.log('SignIn response:', { data, error });
+                if (error) {
+                    console.error('Sign-in error details:', error);
+                    alert('Sign-in Error: ' + error.message);
+                }
+            } catch (err) {
+                console.error('Unexpected sign-in error:', err);
+                alert('An unexpected error occurred: ' + err.message);
+            }
         });
 
         // Sign Out
