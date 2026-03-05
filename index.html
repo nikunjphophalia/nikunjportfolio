@@ -17,8 +17,10 @@
 
     <link rel="stylesheet" href="style.css">
 
-    <!-- Supabase JS Client -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Firebase SDKs (Compact version for easy integration) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 </head>
 
 <body>
@@ -561,148 +563,168 @@
         </div>
     </div>
 
-    <!-- Supabase & Admin Integration Script -->
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+    <!-- Firebase & Admin Integration Script -->
     <script>
         (function () {
-            const CONFIG = {
-                URL: 'https://dqaulmpuazmvbvfdktiz.supabase.co',
-                KEY: 'sb_publishable_7HwEAqjE3kWaerZq1c3XrQ_JpgOIanT',
-                ZAPIER: 'https://hooks.zapier.com/hooks/catch/25369092/uccqnlx/',
-                ADMIN: 'admin-nikunjphophalia@gmail.com'
+            // --- 1. CONFIGURATION ---
+            // PASTE YOUR FIREBASE CONFIG HERE
+            const firebaseConfig = {
+                apiKey: "AIzaSyCUk1Ya6Uo7U1y_n1S4ugag4bElvnK1DiI",
+                authDomain: "nikunj-portfolio-7853f.firebaseapp.com",
+                projectId: "nikunj-portfolio-7853f",
+                storageBucket: "nikunj-portfolio-7853f.firebasestorage.app",
+                messagingSenderId: "661542452555",
+                appId: "1:661542452555:web:6f0185e6f1770171273cce",
+                measurementId: "G-NY76LY2XDD"
             };
 
-            // Safety check for keys
-            if (CONFIG.KEY.startsWith('sb_publishable')) {
-                console.warn('⚠️ WARNING: You are using a "sb_publishable" key. If login fails, please replace it with your "anon public" key (starts with "eyJ") from Supabase Settings > API.');
-            }
+            const ZAPIER_URL = 'https://hooks.zapier.com/hooks/catch/25369092/uccqnlx/';
+            const ADMIN_EMAIL = 'admin-nikunjphophalia@gmail.com';
 
-            // Initialize Client
-            const sbClient = window.supabase.createClient(CONFIG.URL, CONFIG.KEY);
-            window.nikunjSB = sbClient;
+            // Initialize Firebase
+            firebase.initializeApp(firebaseConfig);
+            const db = firebase.firestore();
+            const auth = firebase.auth();
 
             // UI Elements
-            const getEl = (id) => document.getElementById(id);
-            const elements = {
-                form: getEl('contactForm'),
-                portal: getEl('adminPortal'),
-                authSec: getEl('adminAuthSection'),
-                dashSec: getEl('adminDashboard'),
-                list: getEl('submissionsList'),
-                loginLink: getEl('adminLoginLink'),
-                closeBtn: getEl('closeAdmin'),
-                googleBtn: getEl('googleSignIn'),
-                logoutBtn: getEl('signOut'),
-                emailDisplay: getEl('adminEmail')
+            const get = (id) => document.getElementById(id);
+            const ui = {
+                form: get('contactForm'),
+                portal: get('adminPortal'),
+                authSec: get('adminAuthSection'),
+                dashSec: get('adminDashboard'),
+                list: get('submissionsList'),
+                loginLink: get('adminLoginLink'),
+                closeBtn: get('closeAdmin'),
+                googleBtn: get('googleSignIn'),
+                logoutBtn: get('signOut'),
+                emailDisplay: get('adminEmail')
             };
 
-            // Form Handler
-            elements.form.addEventListener('submit', async (e) => {
+            // --- 2. CONTACT FORM LOGIC ---
+            ui.form.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                const btn = elements.form.querySelector('.submit-btn');
+                const btn = ui.form.querySelector('.submit-btn');
                 const originalText = btn.innerText;
+
                 btn.innerText = 'SENDING...';
                 btn.disabled = true;
 
-                const formData = new FormData(elements.form);
-                const data = {
+                const formData = new FormData(ui.form);
+                const payload = {
                     name: formData.get('user_name'),
                     email: formData.get('user_email'),
-                    message: formData.get('user_message')
+                    message: formData.get('user_message'),
+                    created_at: firebase.firestore.FieldValue.serverTimestamp()
                 };
 
                 try {
-                    const res = await fetch(`${CONFIG.URL}/rest/v1/contact_submissions`, {
-                        method: 'POST',
-                        headers: {
-                            'apikey': CONFIG.KEY,
-                            'Authorization': `Bearer ${CONFIG.KEY}`,
-                            'Content-Type': 'application/json',
-                            'Prefer': 'return=minimal'
-                        },
-                        body: JSON.stringify(data)
-                    });
+                    // Save to Firebase Firestore
+                    await db.collection("contact_submissions").add(payload);
 
-                    fetch(CONFIG.ZAPIER, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) });
+                    // Backup to Zapier
+                    fetch(ZAPIER_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
 
-                    if (res.ok) {
-                        alert('Message Sent Successfully!');
-                        elements.form.reset();
-                        if (elements.dashSec.style.display === 'block') loadMessages();
-                    } else { throw new Error('Failed'); }
+                    alert('Message Sent Successfully!');
+                    ui.form.reset();
                 } catch (err) {
-                    alert('Error sending message. Check your Supabase table RLS policies.');
+                    console.error("Firestore Error:", err);
+                    alert('Error: ' + err.message);
                 } finally {
                     btn.innerText = originalText;
                     btn.disabled = false;
                 }
             });
 
-            // Dashboard Functions
-            window.nikunjLogin = async () => {
-                console.log("Redirecting to Google...");
-                const { error } = await sbClient.auth.signInWithOAuth({
-                    provider: 'google',
-                    options: { redirectTo: window.location.origin }
-                });
-                if (error) alert(error.message);
+            // --- 3. ADMIN PORTAL LOGIC ---
+
+            // Open/Close
+            ui.loginLink.addEventListener('click', () => ui.portal.classList.add('active'));
+            ui.closeBtn.addEventListener('click', () => ui.portal.classList.remove('active'));
+
+            // Google Sign In
+            ui.googleBtn.onclick = () => {
+                const provider = new firebase.auth.GoogleAuthProvider();
+                auth.signInWithPopup(provider).catch(err => alert(err.message));
             };
 
-            window.nikunjLogout = async () => {
-                await sbClient.auth.signOut();
-                window.location.reload();
-            };
+            // Sign Out
+            ui.logoutBtn.onclick = () => auth.signOut();
 
-            async function checkAccess() {
-                const { data: { user } } = await sbClient.auth.getUser();
-                if (user && user.email === CONFIG.ADMIN) {
-                    elements.authSec.style.display = 'none';
-                    elements.dashSec.style.display = 'block';
-                    elements.emailDisplay.innerText = user.email;
+            // Auth Observer
+            auth.onAuthStateChanged(user => {
+                if (user && user.email === ADMIN_EMAIL) {
+                    ui.authSec.style.display = 'none';
+                    ui.dashSec.style.display = 'block';
+                    ui.emailDisplay.innerText = user.email;
                     loadMessages();
                 } else if (user) {
-                    elements.authSec.innerHTML = `
-                        <p>Access Denied. Only ${CONFIG.ADMIN} can enter.</p>
-                        <button onclick="window.nikunjLogout()" class="btn btn-ghost">Switch Account</button>
+                    ui.authSec.innerHTML = `
+                        <p>Access Denied. Only ${ADMIN_EMAIL} can enter.</p>
+                        <button onclick="firebase.auth().signOut()" class="btn btn-ghost">Switch Account</button>
                     `;
-                    elements.authSec.style.display = 'block';
-                    elements.dashSec.style.display = 'none';
+                    ui.authSec.style.display = 'block';
+                    ui.dashSec.style.display = 'none';
                 } else {
-                    elements.authSec.style.display = 'block';
-                    elements.dashSec.style.display = 'none';
+                    ui.authSec.innerHTML = `
+                        <p>Welcome, Nikunj. Please sign in to access your messages.</p>
+                        <button id="googleSignIn" onclick="window.nikunjLogin()" class="btn btn-primary">Sign in with Google</button>
+                    `;
+                    ui.authSec.style.display = 'block';
+                    ui.dashSec.style.display = 'none';
                 }
-            }
+            });
 
-            async function loadMessages() {
-                elements.list.innerHTML = '<p class="loading-msg">Fetching...</p>';
-                const { data, error } = await sbClient.from('contact_submissions').select('*').order('created_at', { ascending: false });
-                if (error) { elements.list.innerHTML = `<p class="error-msg">${error.message}</p>`; return; }
-                if (!data || data.length === 0) { elements.list.innerHTML = '<p class="loading-msg">No messages found.</p>'; return; }
-
-                elements.list.innerHTML = data.map(m => `
-                    <div class="submission-card">
-                        <div class="sub-header"><strong>${m.name}</strong><span class="sub-email">${m.email}</span></div>
-                        <p class="sub-body">${m.message}</p>
-                        <button class="delete-sub" onclick="window.deleteMsg('${m.id}')">Delete</button>
-                    </div>
-                `).join('');
-            }
-
-            window.deleteMsg = async (id) => {
-                if (!confirm('Delete this message?')) return;
-                const { error } = await sbClient.from('contact_submissions').delete().eq('id', id);
-                if (error) alert(error.message); else loadMessages();
+            // Need global for the dynamically replaced button inside auth observer
+            window.nikunjLogin = () => {
+                const provider = new firebase.auth.GoogleAuthProvider();
+                auth.signInWithPopup(provider).catch(err => alert(err.message));
             };
 
-            // Event Listeners for Portal
-            elements.loginLink.addEventListener('click', () => { elements.portal.classList.add('active'); checkAccess(); });
-            elements.closeBtn.addEventListener('click', () => elements.portal.classList.remove('active'));
-            elements.logoutBtn.addEventListener('click', window.nikunjLogout);
+            // Load Submissions
+            function loadMessages() {
+                ui.list.innerHTML = '<p class="loading-msg">Fetching messages...</p>';
 
-            // Attach login to button
-            elements.googleBtn.addEventListener('click', window.nikunjLogin);
+                db.collection("contact_submissions")
+                    .orderBy("created_at", "desc")
+                    .onSnapshot(snapshot => {
+                        if (snapshot.empty) {
+                            ui.list.innerHTML = '<p class="loading-msg">No messages yet.</p>';
+                            return;
+                        }
 
-            // Run check on static load
-            checkAccess();
+                        ui.list.innerHTML = snapshot.docs.map(doc => {
+                            const m = doc.data();
+                            const date = m.created_at ? m.created_at.toDate().toLocaleDateString() : 'Just now';
+                            return `
+                            <div class="submission-card">
+                                <div class="sub-header">
+                                    <strong>${m.name}</strong>
+                                    <span class="sub-email">${m.email}</span>
+                                    <span class="sub-date">${date}</span>
+                                </div>
+                                <p class="sub-body">${m.message}</p>
+                                <button class="delete-sub" onclick="window.deleteDoc('${doc.id}')">Delete</button>
+                            </div>
+                          `;
+                        }).join('');
+                    }, err => {
+                        ui.list.innerHTML = `<p class="error-msg">Permission Denied. Check Firestore rules.</p>`;
+                    });
+            }
+
+            // Delete
+            window.deleteDoc = async (id) => {
+                if (confirm('Delete this message?')) {
+                    await db.collection("contact_submissions").doc(id).delete();
+                }
+            };
+
         })();
     </script>
 
