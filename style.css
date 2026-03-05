@@ -137,7 +137,8 @@ section.revealed,
 }
 
 .nav-container {
-    max-width: 1600px;
+    max-width: 1400px;
+    /* Reduced from 1600px for a more intimate feel */
     margin: 0 auto;
     padding: 0 5rem;
     display: flex;
@@ -227,7 +228,7 @@ section.revealed,
     }
 
     100% {
-        transform: scale(2.5);
+        transform: scale(2.2);
         opacity: 0;
     }
 }
@@ -262,10 +263,15 @@ section.revealed,
 .hero-stats {
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
-    gap: 3.5rem;
-    padding-left: 4rem;
+    justify-content: center;
+    /* Center it vertically */
+    gap: 4rem;
+    padding-left: 5rem;
     border-left: 1px solid var(--border);
+}
+
+.hero-stats>* {
+    max-width: fit-content;
 }
 
 .stat-item {
@@ -290,7 +296,8 @@ section.revealed,
 
 /* SECTIONS */
 section {
-    padding: 12rem 5rem;
+    padding: 10rem 5rem;
+    /* Reduced from 12rem */
 }
 
 .section-label {
@@ -313,18 +320,21 @@ section {
 }
 
 .section-heading {
-    font-size: clamp(3rem, 6vw, 6rem);
+    font-size: clamp(3rem, 6.5vw, 6.5rem);
     line-height: 1;
-    margin-bottom: 6rem;
-    letter-spacing: -0.03em;
+    margin-bottom: 4rem;
+    /* Reduced from 6rem */
+    letter-spacing: -0.04em;
 }
 
 /* ABOUT */
 .about-grid {
     display: grid;
     grid-template-columns: 450px 1fr;
-    gap: 10rem;
-    align-items: start;
+    gap: 12rem;
+    /* Increased for better visual breathing room */
+    align-items: center;
+    /* Center vertically for better balance */
 }
 
 .portrait-box {
@@ -354,11 +364,13 @@ section {
 /* PROJECT LIST (Redefined for Campus Leadership) */
 .project-row {
     display: grid;
-    grid-template-columns: 100px 1fr 1.5fr;
+    grid-template-columns: 100px 1.2fr 1.5fr;
+    /* More balanced distribution */
     padding: 3.5rem 0;
     border-bottom: 1px solid var(--border);
     align-items: center;
-    transition: padding 0.4s var(--transition);
+    gap: 4rem;
+    transition: all 0.6s var(--transition);
 }
 
 .project-row:hover {
@@ -409,12 +421,13 @@ section {
 }
 
 .skill-nav-item {
-    padding: 2rem 0;
+    padding: 1.5rem 0;
     font-family: var(--font-heading);
-    font-size: 2rem;
+    font-size: 1.8rem;
     color: var(--text-muted);
     border-bottom: 1px solid var(--border);
     cursor: pointer;
+    transition: all 0.4s var(--transition);
 }
 
 input[name="skill-tabs"]:checked+label {
@@ -430,17 +443,35 @@ input[name="skill-tabs"]:checked+label {
 
 .skill-cell {
     background: var(--bg-accent);
-    padding: 3.5rem;
+    padding: 2.5rem;
     border: 1px solid var(--border);
     border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .skill-info {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 1.5rem;
+    align-items: center;
+    /* Better vertical alignment */
+    margin-bottom: 1.2rem;
     font-family: var(--font-mono);
-    font-size: 0.8rem;
+    font-size: 0.75rem;
+    /* Slightly smaller to prevent overlap */
+    gap: 1rem;
+}
+
+.skill-info span:first-child {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.skill-info span:last-child {
+    color: var(--gold);
+    flex-shrink: 0;
 }
 
 /* TIMELINE (EXPERIENCE) */
@@ -450,22 +481,31 @@ input[name="skill-tabs"]:checked+label {
 
 .exp-grid {
     display: grid;
-    grid-template-columns: 380px 1fr;
-    gap: 8rem;
+    grid-template-columns: 400px 1fr;
+    gap: 10rem;
+    align-items: start;
 }
 
 .exp-item {
-    padding: 2.5rem;
+    padding: 2rem;
     border: 1px solid var(--border);
     background: var(--bg-accent);
     border-radius: 4px;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.2rem;
     cursor: pointer;
+    transition: all 0.4s var(--transition);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.exp-item:hover {
+    border-color: var(--gold-dim);
 }
 
 input[name="exp-tabs"]:checked+label {
     border-color: var(--gold);
-    transform: scale(1.02);
+    background: rgba(212, 175, 55, 0.05);
 }
 
 .exp-date {
@@ -489,10 +529,24 @@ input[name="exp-tabs"]:checked+label {
 
 .exp-panel {
     background: var(--bg-accent);
-    padding: 5.5rem;
+    padding: 4rem;
+    /* Slightly reduced for better fit */
     border: 1px solid var(--border);
     border-radius: 4px;
     display: none;
+    animation: fadeIn 0.6s var(--transition);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .role-title {
