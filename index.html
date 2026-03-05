@@ -12,7 +12,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@400&family=Jost:wght@300;400&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Sora:wght@100..800&family=DM+Mono:wght@400&display=swap"
         rel="stylesheet">
 
     <link rel="stylesheet" href="style.css">
@@ -24,6 +24,12 @@
 </head>
 
 <body>
+    <!-- Custom Cursor -->
+    <div class="custom-cursor"></div>
+    <div class="cursor-dot"></div>
+
+    <!-- Background Noise -->
+    <div class="noise"></div>
 
     <!-- Scroll Cue Target -->
     <div id="top"></div>
@@ -51,7 +57,10 @@
             <div class="hero-container">
                 <div class="hero-content">
                     <div class="eyebrow fade-up" style="animation-delay: 0.1s">
-                        <span class="line"></span>
+                        <div class="status-badge">
+                            <span class="status-dot"></span>
+                            <span class="status-text">Available for New Projects</span>
+                        </div>
                         <span class="text">Aspiring Marketer & Business Development Expert</span>
                     </div>
                     <h1 class="fade-up" style="animation-delay: 0.3s">
@@ -510,13 +519,16 @@
                 <div class="contact-form-container">
                     <form class="contact-form" id="contactForm">
                         <div class="form-group">
-                            <input type="text" name="user_name" placeholder="Name" required>
+                            <input type="text" name="user_name" placeholder=" " required>
+                            <label>Name</label>
                         </div>
                         <div class="form-group">
-                            <input type="email" name="user_email" placeholder="Email" required>
+                            <input type="email" name="user_email" placeholder=" " required>
+                            <label>Email Address</label>
                         </div>
                         <div class="form-group">
-                            <textarea name="user_message" placeholder="Your Message" required></textarea>
+                            <textarea name="user_message" placeholder=" " required></textarea>
+                            <label>How can I help you?</label>
                         </div>
                         <button type="submit" class="btn btn-primary submit-btn">Send Message</button>
                     </form>
@@ -572,7 +584,6 @@
     <script>
         (function () {
             // --- 1. CONFIGURATION ---
-            // PASTE YOUR FIREBASE CONFIG HERE
             const firebaseConfig = {
                 apiKey: "AIzaSyCUk1Ya6Uo7U1y_n1S4ugag4bElvnK1DiI",
                 authDomain: "nikunj-portfolio-7853f.firebaseapp.com",
@@ -586,7 +597,6 @@
             const ZAPIER_URL = 'https://hooks.zapier.com/hooks/catch/25369092/uccqnlx/';
             const ADMIN_EMAIL = 'admin-nikunjphophalia@gmail.com';
 
-            // Initialize Firebase
             firebase.initializeApp(firebaseConfig);
             const db = firebase.firestore();
             const auth = firebase.auth();
@@ -603,15 +613,54 @@
                 closeBtn: get('closeAdmin'),
                 googleBtn: get('googleSignIn'),
                 logoutBtn: get('signOut'),
-                emailDisplay: get('adminEmail')
+                emailDisplay: get('adminEmail'),
+                navbar: document.querySelector('.navbar'),
+                cursor: document.querySelector('.custom-cursor'),
+                cursorDot: document.querySelector('.cursor-dot')
             };
 
-            // --- 2. CONTACT FORM LOGIC ---
+            // --- 2. PREMIUM INTERACTIONS ---
+
+            // Custom Cursor Logic
+            document.addEventListener('mousemove', (e) => {
+                const x = e.clientX;
+                const y = e.clientY;
+                ui.cursor.style.left = x + 'px';
+                ui.cursor.style.top = y + 'px';
+                ui.cursorDot.style.left = x + 'px';
+                ui.cursorDot.style.top = y + 'px';
+            });
+
+            const interactables = document.querySelectorAll('a, button, .exp-item, .skill-nav-item, input, textarea');
+            interactables.forEach(item => {
+                item.addEventListener('mouseenter', () => ui.cursor.classList.add('cursor-hover'));
+                item.addEventListener('mouseleave', () => ui.cursor.classList.remove('cursor-hover'));
+            });
+
+            // Navbar Scroll Effect
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 80) ui.navbar.classList.add('scrolled');
+                else ui.navbar.classList.remove('scrolled');
+            });
+
+            // Smooth Scroll Reveal
+            const observerOptions = { threshold: 0.1 };
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('revealed');
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('section, .fade-up').forEach(el => revealObserver.observe(el));
+
+            // --- 3. BACKEND LOGIC ---
+
             ui.form.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const btn = ui.form.querySelector('.submit-btn');
                 const originalText = btn.innerText;
-
                 btn.innerText = 'SENDING...';
                 btn.disabled = true;
 
@@ -624,16 +673,11 @@
                 };
 
                 try {
-                    // Save to Firebase Firestore
                     await db.collection("contact_submissions").add(payload);
-
-                    // Backup to Zapier
                     fetch(ZAPIER_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
-
-                    alert('Message Sent Successfully!');
+                    alert('Message Sent!');
                     ui.form.reset();
                 } catch (err) {
-                    console.error("Firestore Error:", err);
                     alert('Error: ' + err.message);
                 } finally {
                     btn.innerText = originalText;
@@ -641,22 +685,16 @@
                 }
             });
 
-            // --- 3. ADMIN PORTAL LOGIC ---
-
-            // Open/Close
             ui.loginLink.addEventListener('click', () => ui.portal.classList.add('active'));
             ui.closeBtn.addEventListener('click', () => ui.portal.classList.remove('active'));
 
-            // Google Sign In
-            ui.googleBtn.onclick = () => {
+            window.nikunjLogin = () => {
                 const provider = new firebase.auth.GoogleAuthProvider();
                 auth.signInWithPopup(provider).catch(err => alert(err.message));
             };
 
-            // Sign Out
-            ui.logoutBtn.onclick = () => auth.signOut();
+            ui.logoutBtn.addEventListener('click', () => auth.signOut());
 
-            // Auth Observer
             auth.onAuthStateChanged(user => {
                 if (user && user.email === ADMIN_EMAIL) {
                     ui.authSec.style.display = 'none';
@@ -664,65 +702,35 @@
                     ui.emailDisplay.innerText = user.email;
                     loadMessages();
                 } else if (user) {
-                    ui.authSec.innerHTML = `
-                        <p>Access Denied. Only ${ADMIN_EMAIL} can enter.</p>
-                        <button onclick="firebase.auth().signOut()" class="btn btn-ghost">Switch Account</button>
-                    `;
+                    ui.authSec.innerHTML = `<p>Access Denied.</p><button onclick="firebase.auth().signOut()" class="btn btn-ghost">Switch Account</button>`;
                     ui.authSec.style.display = 'block';
                     ui.dashSec.style.display = 'none';
                 } else {
-                    ui.authSec.innerHTML = `
-                        <p>Welcome, Nikunj. Please sign in to access your messages.</p>
-                        <button id="googleSignIn" onclick="window.nikunjLogin()" class="btn btn-primary">Sign in with Google</button>
-                    `;
+                    ui.authSec.innerHTML = `<p>Admin Login</p><button id="googleSignIn" onclick="window.nikunjLogin()" class="btn btn-primary">Sign in with Google</button>`;
                     ui.authSec.style.display = 'block';
                     ui.dashSec.style.display = 'none';
                 }
             });
 
-            // Need global for the dynamically replaced button inside auth observer
-            window.nikunjLogin = () => {
-                const provider = new firebase.auth.GoogleAuthProvider();
-                auth.signInWithPopup(provider).catch(err => alert(err.message));
-            };
-
-            // Load Submissions
             function loadMessages() {
-                ui.list.innerHTML = '<p class="loading-msg">Fetching messages...</p>';
-
                 db.collection("contact_submissions")
                     .orderBy("created_at", "desc")
                     .onSnapshot(snapshot => {
-                        if (snapshot.empty) {
-                            ui.list.innerHTML = '<p class="loading-msg">No messages yet.</p>';
-                            return;
-                        }
-
+                        if (snapshot.empty) { ui.list.innerHTML = '<p>No messages yet.</p>'; return; }
                         ui.list.innerHTML = snapshot.docs.map(doc => {
                             const m = doc.data();
                             const date = m.created_at ? m.created_at.toDate().toLocaleDateString() : 'Just now';
-                            return `
-                            <div class="submission-card">
-                                <div class="sub-header">
-                                    <strong>${m.name}</strong>
-                                    <span class="sub-email">${m.email}</span>
-                                    <span class="sub-date">${date}</span>
-                                </div>
+                            return `<div class="submission-card">
+                                <div class="sub-header"><strong>${m.name}</strong><span class="sub-email">${m.email}</span></div>
                                 <p class="sub-body">${m.message}</p>
                                 <button class="delete-sub" onclick="window.deleteDoc('${doc.id}')">Delete</button>
-                            </div>
-                          `;
+                            </div>`;
                         }).join('');
-                    }, err => {
-                        ui.list.innerHTML = `<p class="error-msg">Permission Denied. Check Firestore rules.</p>`;
                     });
             }
 
-            // Delete
             window.deleteDoc = async (id) => {
-                if (confirm('Delete this message?')) {
-                    await db.collection("contact_submissions").doc(id).delete();
-                }
+                if (confirm('Delete this message?')) await db.collection("contact_submissions").doc(id).delete();
             };
 
         })();
